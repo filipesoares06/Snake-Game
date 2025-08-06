@@ -1,0 +1,122 @@
+/*CG_EXTRAS
+collection of functions to help speed up programming in OF
+
+Developed for the Computer Graphics course @:
+Informatics Engineering Department
+University of Coimbra
+by
+Andr� Perrotta & Evgheni Polisciuc
+
+Coimbra, 09/2023
+*/
+
+#ifndef CGEXTRAS_H
+#define CGEXTRAS_H
+
+#include "ofMain.h"
+
+//short named function to get screen width
+inline float gw() {
+	return ofGetWidth();
+}
+
+//short named function to get screen height
+inline float gh() {
+	return ofGetHeight();
+}
+
+//short named function to put Frame Rate as window title
+inline void setFrWt() {
+	ofSetWindowTitle(ofToString(ofGetFrameRate()));
+}
+
+inline void coutModelviewMatrix() {   //Método responsável por imprimir a matriz ModelViewMatrix.
+	GLfloat Matriz[4][4];
+	cout << endl << "Modelview Matrix" << endl;
+	glGetFloatv(GL_MODELVIEW_MATRIX, &Matriz[0][0]);
+	
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			cout << Matriz[j][i] << " ";
+		}
+
+		cout << endl;
+	}
+
+	//return;
+}
+
+inline void coutProjectionMatrix() {   //Método responsável por imprimir a matriz de projeção.
+	GLfloat Matriz[4][4];
+	cout << endl << "Projection Matrix" << endl;
+	glGetFloatv(GL_PROJECTION_MATRIX, &Matriz[0][0]);
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			cout << Matriz[j][i] << " ";
+		}
+
+		cout << endl;
+	}
+
+	//return;
+}
+
+inline ofVec3f getModelViewMatrixPos() {   //Método responsável por retornar os valores de translação da matriz ModelView.
+	GLfloat Matriz[4][4];
+	glGetFloatv(GL_MODELVIEW_MATRIX, &Matriz[0][0]);
+	ofVec3f aux;
+
+	aux.x = Matriz[3][0];
+	aux.y = Matriz[3][1];
+	aux.z = Matriz[3][2];
+
+	//cout << endl << aux.x<<" "<<aux.y<<" "<<aux.z;
+
+	return aux;
+}
+
+inline void printMatrix(GLfloat m[][4]) {   //Método responsável por imprimir a matriz 4x4.
+	cout << endl << "Matrix 4x4" << endl;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			cout << m[j][i] << " ";
+		}
+
+		cout << endl;
+	}
+
+	cout << endl << "matrix" << endl;
+}
+
+inline ofVec3f cross(ofVec3f A, ofVec3f B) {
+	ofVec3f aux;
+
+	aux.x = A.y * B.z - A.z * B.y;
+	aux.y = A.z * B.x - A.x * B.z;
+	aux.z = A.x * B.y - A.y * B.x;
+
+	return aux;
+}
+
+inline float randomDir() {
+	if (ofRandom(0, 1) < 0.5) {
+		return -1.;
+	}
+
+	return 1.;
+}
+
+inline GLfloat getMultiNoise(float x, float y, float f[], float a[], int numBands) {
+	float noise = 0;
+	float maxAmp = 0.;
+
+	for (int i = 0; i < numBands; i++) {
+		noise += a[i] * ofNoise(f[i] * x, f[i] * y);
+		maxAmp += a[i];
+	}
+	return noise / maxAmp;
+}
+
+#endif
